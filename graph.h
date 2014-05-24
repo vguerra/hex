@@ -1,14 +1,15 @@
+// Victor Guerra <vguerra@gmail.com>
+// Nov 2014
 
 // A graph object has the following structure:
 
 // There is a vector '_VertexValue' where each vertice's value is stored ( this
-// will
-// store the total path cost calculated by the shortest path algo to reach the
+// will store the total path cost calculated by the shortest path algo to reach
+// the
 // given vertex from the source vertex.)
 
 // The edges are presented by a vector of sets '_Edge'. Given an edge (i, j): i
-// is
-// used to index the vector and j is stored in the given set to indicate that
+// is used to index the vector and j is stored in the given set to indicate that
 // an edge connects i and j.
 //
 // Given the fact that we are dealing with an undirected graph, when
@@ -28,7 +29,7 @@
 #include <string>
 
 class Graph {
- public:
+  public:
   Graph(unsigned int V);  // Constructor that initializes a graph for a given
                           // number of vertex.
   Graph(unsigned int V, double EdgeDensity, unsigned int lowerDistance,
@@ -66,11 +67,11 @@ class Graph {
 
   unsigned int mst(unsigned int source, std::set<unsigned> &mst_vertices);
 
- private:
+  private:
   unsigned int _V;
   unsigned int _E;
   std::vector<unsigned int> _VertexValue;
-  std::vector<std::set<unsigned int> > _Edge;
+  std::vector<std::set<unsigned int>> _Edge;
   std::map<std::pair<unsigned int, unsigned int>, unsigned int> _EdgeValue;
 
   void initVertices();

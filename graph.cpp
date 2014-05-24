@@ -1,3 +1,5 @@
+// Victor Guerra <vguerra@gmail.com>
+// Nov 2014
 
 #include "graph.h"
 

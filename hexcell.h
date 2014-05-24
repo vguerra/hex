@@ -8,28 +8,23 @@
 #define HEXCELL_H_
 
 // All possible colors a Cell can have
-enum class CellColor : short {
-  EMPTY = 46,
-  BLUE = 79,
-  RED = 88
-};
+enum class CellColor : short { EMPTY = 46, BLUE = 79, RED = 88 };
 std::ostream& operator<<(std::ostream& out, const CellColor& color);
 
 class HexCell {
- public:
-  explicit HexCell(CellColor color = CellColor::EMPTY, unsigned id = 0) : _color(color), _id(id) {}
+  public:
+  explicit HexCell(CellColor color = CellColor::EMPTY, unsigned id = 0)
+      : _color(color), _id(id) {}
   ~HexCell() {}
   void set_color(CellColor new_color) {
     _color = new_color;
   }                                               // Set color helper
-  void set_id(unsigned id) {
-    _id = id;
-  }   // Set id helper
+  void set_id(unsigned id) { _id = id; }          // Set id helper
   CellColor get_color() const { return _color; }  // Get color helper
-  unsigned get_id() const {return _id; } // Get id helper
+  unsigned get_id() const { return _id; }         // Get id helper
   friend std::ostream& operator<<(std::ostream& out, const HexCell& cell);
 
- private:
+  private:
   CellColor _color;
   unsigned _id;
 };

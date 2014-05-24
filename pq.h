@@ -28,7 +28,7 @@ typedef struct edge_t {
 bool edge_t_comp(edge_t e1, edge_t e2);
 
 class MinPriorityQueue {
- public:
+  public:
   MinPriorityQueue();          // Default Constructor
   inline size_t size() const;  // Returns the size of elements on the priority
                                // queue.
@@ -44,6 +44,6 @@ class MinPriorityQueue {
   //                                            // value already stored into the
   //                                            // priority queue.
 
- private:
+  private:
   std::vector<edge_t> _pq;
 };

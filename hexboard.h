@@ -11,24 +11,29 @@
 #define HEXCBOARD_H_
 
 class HexBoard {
- public:
+  public:
   explicit HexBoard(unsigned dimension);  // We need the dimensions of the boar
                                           // for initialization.
   ~HexBoard();
-  void Init(); // Initializes all parameters relevant for the board configuration.
-  bool is_valid_move(unsigned row, unsigned col) const;  // Checks if the move is valid
+  void Init();  // Initializes all parameters relevant for the board
+                // configuration.
+  bool is_valid_move(unsigned row,
+                     unsigned col) const;  // Checks if the move is valid
   bool is_finished();  // Whether the game has come to an end.
   bool is_winner(Graph* cell_graph, const CellColor& color);
-  bool is_cell_empty(unsigned row, unsigned col) const;  // Checks if the cell is empty or not.
-  bool make_move(unsigned row,
-                 unsigned col, Graph *cell_graph, std::vector<HexCell>& cells, const CellColor& color);  // If a move is valid, we process it.
-  void play();  // Run the loop until game is over.
-  void make_human_move();  // Performs a move by a human player.
-  void make_AI_move();  // Performs a move by the computer using a Monte Carlo simulation.
+  bool is_cell_empty(
+      unsigned row, unsigned col) const;  // Checks if the cell is empty or not.
+  bool make_move(unsigned row, unsigned col, Graph* cell_graph,
+                 std::vector<HexCell>& cells,
+                 const CellColor& color);  // If a move is valid, we process it.
+  void play();                             // Run the loop until game is over.
+  void make_human_move();                  // Performs a move by a human player.
+  void make_AI_move();  // Performs a move by the computer using a Monte Carlo
+                        // simulation.
   friend std::ostream& operator<<(std::ostream& out, const HexBoard& board);
 
- private:
-  DISALLOW_COPY_AND_ASSIGN(HexBoard);  // Using google's technik for disabling
+  private:
+  DISALLOW_COPY_AND_ASSIGN(HexBoard);  // Using google's technic for disabling
                                        // copy and assign.
   const unsigned _MC_TRIES = 10000;
   unsigned _dimension, _boarders_base;

@@ -31,32 +31,30 @@ HexBoard::HexBoard(unsigned dimension)
 HexBoard::~HexBoard() { delete _cell_graph; }
 
 void HexBoard::Init() {
-
   // Initializing vector of cells
   _played_cells.clear();
   _played_cells.resize(_boarders_base + 4);
 
-  
   // We assign an id to each cell, that is usefull to remember the original
   // position of the cell when shuffling the cells in the monte carlo simulation
 
-  for (unsigned index = 0; index < (_boarders_base + 4) ; ++index) {
+  for (unsigned index = 0; index < (_boarders_base + 4); ++index) {
     _played_cells[index].set_id(index);
   }
 
   // Assigning the right colours to the four cardinal points on the board.
-  _played_cells[_boarders_base].set_color(CellColor::RED);  // North
-  _played_cells[_boarders_base + 1].set_color(CellColor::RED);  // South 
+  _played_cells[_boarders_base].set_color(CellColor::RED);       // North
+  _played_cells[_boarders_base + 1].set_color(CellColor::RED);   // South
   _played_cells[_boarders_base + 2].set_color(CellColor::BLUE);  // West
   _played_cells[_boarders_base + 3].set_color(CellColor::BLUE);  // East
 
-  // Interacting with stdin/stdout to configure board. 
+  // Interacting with stdin/stdout to configure board.
 
   char players = '0', first_player = '0', first_turn = '0';
   std::cout << std::string(100, '\n');
 
   while (players != '1' && players != '2') {
-    std::cout << "1 or 2 players? "; 
+    std::cout << "1 or 2 players? ";
     std::cin >> players;
     std::cin.ignore(100, '\n');
   }
@@ -67,7 +65,7 @@ void HexBoard::Init() {
     _use_AI = false;
   }
 
-  while ( toupper(first_player) != 'X' && toupper(first_player) != 'O' ) {
+  while (toupper(first_player) != 'X' && toupper(first_player) != 'O') {
     std::cout << "Which figure you want to play with? X or O? ";
     std::cin >> first_player;
     std::cin.ignore(100, '\n');
@@ -81,14 +79,14 @@ void HexBoard::Init() {
     _second_player = CellColor::RED;
   }
 
-  while ( toupper(first_turn) != 'X' && toupper(first_turn) != 'O' ) {
+  while (toupper(first_turn) != 'X' && toupper(first_turn) != 'O') {
     std::cout << "Which figure should go first? X or O? ";
     std::cin >> first_turn;
     std::cout << "selected " << first_turn << "\n";
     std::cin.ignore(100, '\n');
   }
 
-  // when beginning to play we flip turn 
+  // when beginning to play we flip turn
   // so we invert the choice of the user when choosing
   // which figure goes first.
   if (toupper(first_turn) == 'X') {
@@ -98,12 +96,12 @@ void HexBoard::Init() {
   }
 }
 
-// We starto to play and get out of this procedure until 
+// We start to play and get out of this procedure until
 // a player wins.
 void HexBoard::play() {
   flip_turn();
   while (!is_finished()) {  // Checking if previous player made a winning move.
-    flip_turn();  // Turn for next player.
+    flip_turn();            // Turn for next player.
     std::cout << std::string(100, '\n');
     std::cout << *this;
 
@@ -120,26 +118,27 @@ void HexBoard::play() {
 // This method calculates computer's move.
 void HexBoard::make_AI_move() {
   unsigned MC_tries = _MC_TRIES;
-  std::vector<unsigned> MC_counts (_dimension*_dimension, 0);  // We count the success full tries for each of the free cells available.
+  std::vector<unsigned> MC_counts(_dimension * _dimension,
+                                  0);  // We count the success full tries for
+                                       // each of the free cells available.
 
   while (MC_tries--) {
     CellColor ai_turn = _turn;
     // We need a copy of the actual state of the board: The cells and the graph.
     auto tmp_cells = _played_cells;
-    Graph *tmp_graph = new Graph(*_cell_graph); 
-
+    Graph* tmp_graph = new Graph(*_cell_graph);
 
     unsigned first_free = UINT_MAX;
 
     int long seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::knuth_b generator(static_cast<unsigned>(seed));
 
-    // We shuffle the cells to simulate a random sequence of plays. 
-    std::shuffle (tmp_cells.begin(), tmp_cells.end(), generator);
+    // We shuffle the cells to simulate a random sequence of plays.
+    std::shuffle(tmp_cells.begin(), tmp_cells.end(), generator);
 
     // We walk the sequence of cells, painting them accordingly.
     for (auto cell = tmp_cells.begin(); cell != tmp_cells.end(); ++cell) {
-      unsigned row = static_cast<unsigned>(cell->get_id()/_dimension);
+      unsigned row = static_cast<unsigned>(cell->get_id() / _dimension);
       unsigned col = static_cast<unsigned>(cell->get_id() % _dimension);
       if (make_move(row, col, tmp_graph, tmp_cells, ai_turn)) {
         if (first_free == UINT_MAX) {
@@ -149,15 +148,18 @@ void HexBoard::make_AI_move() {
       }
     }
 
-    // Now that every cell has been painted we verify is this simulation tooks us to a win, i.e. is the computer the winner? 
+    // Now that every cell has been painted we verify is this simulation tooks
+    // us to a win, i.e. is the computer the winner?
     if (is_winner(tmp_graph, _turn)) {
       ++MC_counts[first_free];
-    } 
+    }
     delete tmp_graph;
   }
 
-  // FInally we determine the computers move according to the results of the simulation.
-  long int major_count_index = std::distance(MC_counts.begin() , std::max_element(MC_counts.begin(), MC_counts.end()));
+  // FInally we determine the computers move according to the results of the
+  // simulation.
+  long int major_count_index = std::distance(
+      MC_counts.begin(), std::max_element(MC_counts.begin(), MC_counts.end()));
   unsigned row = static_cast<unsigned>(major_count_index / _dimension);
   unsigned col = static_cast<unsigned>(major_count_index % _dimension);
   make_move(row, col, _cell_graph, _played_cells, _turn);
@@ -177,7 +179,8 @@ void HexBoard::make_human_move() {
     if (std::regex_match(line.c_str(), cm, std::regex("(^[0-9]+)([a-zA-Z])"))) {
       row = static_cast<unsigned>(std::atoi(cm[1].str().c_str()));
       col = cm[2].str().at(0);
-      if (!make_move(row, static_cast<unsigned>(toupper(col) - 65), _cell_graph, _played_cells, _turn)) {
+      if (!make_move(row, static_cast<unsigned>(toupper(col) - 65), _cell_graph,
+                     _played_cells, _turn)) {
         std::cout << "Invalid Move!";
         std::cin.get();
       } else {
@@ -200,7 +203,8 @@ bool HexBoard::is_cell_empty(unsigned row, unsigned col) const {
          CellColor::EMPTY;
 }
 
-bool HexBoard::make_move(unsigned row, unsigned col, Graph *cell_graph, std::vector<HexCell>& cells, const CellColor& color) {
+bool HexBoard::make_move(unsigned row, unsigned col, Graph* cell_graph,
+                         std::vector<HexCell>& cells, const CellColor& color) {
   if (is_valid_move(row, col)) {
     unsigned cell_index = coord_to_index(row, col);
     unsigned source, tail;
