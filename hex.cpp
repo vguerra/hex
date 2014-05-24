@@ -21,7 +21,6 @@ int main(int argc, char* argv[]) {
 
   HexBoard board(dimensions);
 
-  // Run while loop until user does not want to play anymore.
   board.Init();
   board.play();
 
