@@ -8,17 +8,17 @@ EXECUTABLE=hex
 
 CXXFLAGS=-O3 -std=c++11 $(INC)
 
-all: $(SOURCES) $(EXECUTABLE)
+all: play
+
+play: $(SOURCES) $(EXECUTABLE)
+	./$(EXECUTABLE)
+
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CXX) $(LDFLAGS) $(OBJECTS) -o $@
 
-.c.o: 
+.o: 
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-test: all
-	./$(EXECUTABLE)
-
 
 clean:
 	rm -rf *o *out $(EXECUTABLE)
