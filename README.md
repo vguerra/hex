@@ -21,3 +21,4 @@ Before you are able to play, a couple of questions need to be answerd:
 * "Which figure should go first?": Once each player has a figure assigned, choose who should go first.
 * Afterwards the board is displayed and players are ready to input their moves.
 
+![Animation HEX](/screenshots/hex_anim.gif?raw=true "HEX GAME animation")
